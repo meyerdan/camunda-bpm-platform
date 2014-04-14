@@ -1,0 +1,227 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  height:100%;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #101010;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+#main {
+  padding: 50px 0 60px 0;
+}
+
+/** 
+ * define our grid 
+ */
+
+.grid-main {
+  display: table;
+  width: 100%;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.grid-row {
+  display: table-row;
+}
+
+.grid-row-5 {
+  height: 50%; 
+}
+
+.grid-row-100 {
+  height: 100%;
+}
+
+.grid-col {
+  display: table-cell;  
+  float: none;
+  height: 100%;
+}
+
+.grid-col-5 {
+  width: 50%;
+}
+
+.grid-col-100 {
+  width: 100%;
+}
+
+.grid-col-h5 {
+  height: 50%;
+}
+
+.grid-col-handle {
+  width: 1px;
+  background: #101010;
+}
+
+.grid-content-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow:auto;
+}
+
+/** debugger styles */
+
+#dbg {
+  position:absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+}
+
+#dbg-inspector {
+  height:auto;
+}
+
+.dbg-panel {
+  border: solid 2px;
+  background: #fff;
+}
+
+.dbg-panel h2 {
+  background: #3e3e3e;
+  color: #eee;
+  margin-top: 0px;
+  font-size: 12px;
+  padding: 4px;
+  font-weight: bold;
+}
+
+#dbg-script-editor {
+  width: 100%;
+  height: 100%;
+}  
+
+.dbg-cmd-console {
+  display:table;
+}
+
+.dbg-cmd-row {
+  display:table-row;
+  width: 100%;
+}
+
+.dbg-cmd-detail, .dbg-cmd-main {
+  display: table-cell;
+  border-bottom: #ccc solid 1px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  vertical-align: top;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.dbg-cmd-detail {
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #999;
+}
+
+.dbg-cmd-detail .dropdown {
+  display:inline-block;
+  min-width: 70px;
+  text-align: left;
+}
+
+.dbg-cmd-lang {
+  border-left: #ccc dashed 1px;
+}
+
+.dbg-cmd-detail button {
+  padding: 0px;
+  border: 0px solid;
+  font-size: 11px;
+}
+
+.dbg-cmd-detail span {
+  margin-left:5px;
+}
+
+.dbg-cmd-line, .dbg-cmd-line:focus, .dbg-cmd-line:active, .dbg-cmd-line:hover {
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.dbg-cmd-main {
+  width: 100%;
+  word-break: break-all;
+}
+
+.dbg-cmd-line { 
+  width: 100%;
+  padding: 0px;
+}
+
+.container .text-muted {
+  margin: 20px 0;
+}
+
+#footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+/** bpmn-js styling*/
+.canvas {
+  height: 100%;
+}
+
+#bpmn-js-drop-zone {
+  height:100%;
+}
+
+.bpmn-js-buttons {
+  position: fixed;
+  bottom: 70px;
+  left: 20px;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.bpmn-js-buttons > li {
+  display: inline-block;
+  margin-right: 10px;
+}
+.bpmn-js-buttons > li > a {
+  background: #DDD;
+  border: solid 1px #666;
+  display: inline-block;
+  padding: 5px;
+}
+
+.bpmn-js-buttons a {
+  opacity: 0.3;
+}
+
+.bpmn-js-buttons a.active {
+  opacity: 1.0;
+}

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>camunda BPM debugger webapp</title>
+  <link rel="stylesheet" type="text/css" href="styles/main.css">
+</head>
+<body ng-controller="RootCtrl" ng-shim>
+
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">camunda.debugger</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href ng-click="startProcess()" ng-enabled="canStartProcess()">
+            Start
+          </a>
+        </li>
+        <li>
+          <a href ng-click="toggleBreakPoint()">
+            Toggle Breakpoint
+          </a>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+
+  <!-- Begin page content -->
+  <div id="main" class="grid-main">
+
+    <div class="grid-row grid-row-100">
+
+      <div class="grid-col grid-col-5">
+        <div id="bpmn-js-drop-zone" ng-controller="DiagramCtrl">
+
+          <div class="canvas" id="bpmn-js-canvas"></div>
+
+          <ul class="bpmn-js-buttons">
+            <li>
+              <a id="js-deploy-process" href title="Deploy BPMN diagram">
+                Deploy
+              </a>
+            </li>
+            <li>
+              download
+            </li>
+            <li>
+              <a id="js-download-diagram" href title="download BPMN diagram">
+                BPMN diagram
+              </a>
+            </li>
+            <li>
+              <a id="js-download-svg" href title="download as SVG image">
+                SVG image
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid-col grid-col-handle">
+
+      </div>
+      <div class="grid-col grid-col-5">
+
+        <div class="grid-content-wrapper">
+
+          <div id="dbg">
+
+            <div class="grid-main">
+
+              <!-- debugger -->
+              <div class="grid-row grid-row-5">
+
+                <div class="grid-col grid-col-h5 grid-col-100">
+
+                  <div class="grid-content-wrapper">
+
+                    <div class="grid-main">
+
+                      <div class="grid-row grid-row-100">
+                        <div class="grid-col grid-col-5 dbg-panel">
+                          <div id="dbg-susp-ex" ng-controller="ExecutionCtrl">
+                            <h2>Suspended Executions</h2>
+                            <ul ng-repeat="execution in executions">
+                              <li>
+                                <a href ng-click="selectExecution(execution)">
+                                  {{execution.id}}:
+                                  {{execution.operationType}}
+                                  {{execution.currentActivityId}}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div id="dbg-break-pts" ng-controller="BreakpointCtrl">
+                            <h2>Break Points</h2>
+                            <ul ng-repeat="breakpoint in breakpoints">
+                              <li>
+                                <a href>
+                                  {{breakpoint.toString()}}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+
+                        </div>
+                        <div class="grid-col grid-col-5 dbg-panel">
+                          <div id="dbg-vars" ng-controller="VariableCtrl">
+                            <h2>Scope Variables</h2>
+                            <table class="table table-condensed">
+                              <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                              </tr>
+                              <tr ng-repeat="variable in variables">
+                                <td>{{variable.variableName}}</td>
+                                <td>{{variable.variableValue}}</td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <!-- script editor -->
+              <div class="grid-row grid-row-5">
+
+                <div class="grid-col grid-col-h5 grid-col-100">
+
+                  <div class="grid-content-wrapper dbg-panel">
+
+                    <h2>Console</h2>
+
+                    <!--  <div id="dbg-script-editor"> </div> -->
+                    <div id="dbg-cmd-console" ng-controller="ConsoleCtrl">
+                      <div class="dbg-cmd-row dbg-cmd-row-hist" ng-repeat="result in evaluationResults">
+                        <div class="dbg-cmd-detail">
+                          <span>&gt;</span>
+                        </div>
+                        <div class="dbg-cmd-main">
+                          <p class="text-muted">
+                            {{result.script}}
+                          </p>
+                          <p ng-if="result.evaluationFailed" class="text-danger">
+                            {{result.result}}
+                          </p>
+                          <p ng-if="!result.evaluationFailed">
+                            {{result.result}}
+                          </p>
+                        </div>
+                        <div class="dbg-cmd-detail dbg-cmd-lang">
+                          {{result.language}}
+                        </div> 
+                      </div>
+                      
+                      <div class="dbg-cmd-row">
+                        <div class="dbg-cmd-detail">
+                          <span>&gt;</span>
+                        </div>
+                        <div class="dbg-cmd-main">
+                          <textarea class="dbg-cmd-line" ng-model="script" ng-enter="evaluate()" ng-expandable spellcheck="false"></textarea> 
+                        </div>
+                        <div class="dbg-cmd-detail dbg-cmd-lang">
+                          <div class="dropdown">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                              {{scriptLanguage}}
+                              <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-left" data-parent="dbg" >
+                              <li ng-repeat="lang in scriptLanguages"><a href ng-click="selectLanguage(lang)">{{lang}}</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="footer">
+  </div>
+
+  <script src="scripts/vendor/ace/ace.js"></script>
+  <script src="scripts/vendor/bpmn-io/bpmn-viewer.js"></script>
+  <script src="scripts/vendor/jquery/jquery.js"></script>
+  <script src="scripts/vendor/angular/angular.js"></script>
+  <script src="scripts/vendor/bootstrap/bootstrap.js"></script>
+
+
+  <script src="components/root/controller.js"></script>
+  <script src="components/diagram/controller.js"></script>
+  <script src="components/util/logger-service.js"></script>
+  <script src="components/util/keybind-directive.js"></script>
+
+  <script src="components/debugger/debugsession-service.js"></script>
+  <script src="components/debugger/breakpoint-service.js"></script>
+  <script src="components/debugger/breakpoint-controller.js"></script>
+  <script src="components/debugger/execution-controller.js"></script>
+  <script src="components/debugger/variable-controller.js"></script>
+  <script src="components/debugger/console-controller.js"></script>
+  
+  <script src="scripts/app.js"></script>
+
+  <script src="http://localhost:35729/livereload.js"></script>
+</body>
+</html>
